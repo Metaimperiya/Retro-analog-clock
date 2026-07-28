@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analog Clock</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Permanent+Marker&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            background: #222;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .cover {
+            height: 260px;
+            width: 260px;
+            border-radius: 50%;
+            background: linear-gradient(rgba(255,255,255,0) 50%, rgba(255,255,255,.075) 49%);
+            z-index: 65;
+            transform: rotate(130deg);
+            position: absolute;
+            filter: blur(2px);
+            pointer-events: none;
+        }
+
+        .round {
+            height: 300px;
+            width: 300px;
+            border-radius: 50%;
+            box-shadow: inset 1px 1px 3px rgba(255,255,255,.28), 8px 8px 8px rgba(0,0,0,0.75);
+            background: #121212;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 53;
+            position: relative;
+        }
+
+        .round2 {
+            height: 260px;
+            width: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 50%, red 10%, rgba(0,0,0,1) 120%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0px 0px 6px black, 1px 1px 4px rgba(255,255,255,0.4);
+            z-index: 54;
+            position: relative;
+        }
+
+        .round3 {
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+            background: #212121;
+            z-index: 55;
+            box-shadow: 0px 0px 3px rgba(0,0,0,0.75);
+            position: absolute;
+        }
+
+        .hand1, .hand2, .hand3 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            border-radius: 10px 10px 0px 0px;
+            backdrop-filter: blur(2px);
+            box-shadow: 0px 0px 2px rgba(0,0,0,0.75);
+        }
+
+        .hand1 {
+            height: 90px;
+            width: 5px;
+            background: rgba(192,192,192,.85);
+            transform: translate(-50%, -100%);
+            z-index: 35;
+            transition: transform 0.5s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+        }
+
+        .hand2 {
+            height: 75px;
+            width: 6px;
+            background: rgba(192,192,192,.85);
+            transform: translate(-50%, -100%);
+            z-index: 34;
+            transition: transform 0.5s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+        }
+
+        .hand3 {
+            height: 115px;
+            width: 2px;
+            background: rgba(255,255,255,0.6);
+            transform: translate(-50%, -100%);
+            z-index: 36;
+            transition: transform 0.2s cubic-bezier(0, -1.04, 1, 1.9);
+        }
+
+        /* Numbers */
+        .num {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            font-size: 22px;
+            z-index: 1;
+            filter: drop-shadow(0 0 1px rgba(0,0,0,0.8));
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: #ccc;
+            text-align: center;
+        }
+
+        .num p {
+            display: inline-block;
+        }
+
+        .num1  { transform: rotate(30deg); }  .num1 p  { transform: rotate(-30deg); }
+        .num2  { transform: rotate(60deg); }  .num2 p  { transform: rotate(-60deg); }
+        .num3  { transform: rotate(90deg); }  .num3 p  { transform: rotate(-90deg); }
+        .num4  { transform: rotate(120deg); } .num4 p  { transform: rotate(-120deg); }
+        .num5  { transform: rotate(150deg); } .num5 p  { transform: rotate(-150deg); }
+        .num6  { transform: rotate(180deg); } .num6 p  { transform: rotate(-180deg); }
+        .num7  { transform: rotate(210deg); } .num7 p  { transform: rotate(-210deg); }
+        .num8  { transform: rotate(240deg); } .num8 p  { transform: rotate(-240deg); }
+        .num9  { transform: rotate(270deg); } .num9 p  { transform: rotate(-270deg); }
+        .num10 { transform: rotate(300deg); } .num10 p { transform: rotate(-300deg); }
+        .num11 { transform: rotate(330deg); } .num11 p { transform: rotate(-330deg); }
+        .num12 { transform: rotate(360deg); } .num12 p { transform: rotate(-360deg); }
+
+        .stickyhold {
+            position: absolute;
+            bottom: 1vh;
+            right: 10vw;
+            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.95));
+        }
+
+        .note {
+            color: white;
+            font-family: 'Permanent Marker', cursive;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-size: 24px;
+            height: 60px;
+            margin: 0;
+            position: relative;
+        }
+
+        .note p {
+            transform: rotate(12deg);
+            position: absolute;
+            left: 9px;
+            bottom: -12px;
+        }
+
+        @media (max-width: 600px) {
+            .note { font-size: 14px; }
+            .stickyhold { bottom: 5vh; right: 8vw; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="round">
+    <div class="round2">
+        <!-- Numbers -->
+        <div class="num num1"><p>1</p></div>
+        <div class="num num2"><p>2</p></div>
+        <div class="num num3"><p>3</p></div>
+        <div class="num num4"><p>4</p></div>
+        <div class="num num5"><p>5</p></div>
+        <div class="num num6"><p>6</p></div>
+        <div class="num num7"><p>7</p></div>
+        <div class="num num8"><p>8</p></div>
+        <div class="num num9"><p>9</p></div>
+        <div class="num num10"><p>10</p></div>
+        <div class="num num11"><p>11</p></div>
+        <div class="num num12"><p>12</p></div>
+
+        <!-- Hands -->
+        <div class="hand1" id="minuteHand"></div>
+        <div class="hand2" id="hourHand"></div>
+        <div class="hand3" id="secondHand"></div>
+
+        <!-- Center dot -->
+        <div class="round3"></div>
+    </div>
+</div>
+
+<div class="cover"></div>
+
+<div class="stickyhold">
+    <div class="note">
+        <p>2024<br>by<br>dustin</p>
+    </div>
+</div>
+
+<script>
+    const minuteHand = document.getElementById('minuteHand');
+    const hourHand = document.getElementById('hourHand');
+    const secondHand = document.getElementById('secondHand');
+
+    function setClock() {
+        const now = new Date();
+        const seconds = now.getSeconds();
+        const minutes = now.getMinutes();
+        const hours = now.getHours() % 12;
+
+        const secondDeg = (seconds / 60) * 360;
+        const minuteDeg = (minutes / 60) * 360 + (seconds / 60) * 6;
+        const hourDeg = (hours / 12) * 360 + (minutes / 60) * 30;
+
+        // Apply smooth CSS transforms centered on the clock pin
+        secondHand.style.transform = `translate(-50%, -100%) rotate(${secondDeg}deg)`;
+        minuteHand.style.transform = `translate(-50%, -100%) rotate(${minuteDeg}deg)`;
+        hourHand.style.transform = `translate(-50%, -100%) rotate(${hourDeg}deg)`;
+    }
+
+    setClock();
+    setInterval(setClock, 1000);
+</script>
+
+</body>
+</html>
